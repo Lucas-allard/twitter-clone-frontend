@@ -1,0 +1,20 @@
+version: '3'
+services:
+  database:
+    image: nayzow/twitter-clone-database
+    restart: always
+    networks:
+      - twitter-clone-network
+
+  api:
+    image: nayzow/twitter-clone-backend
+    restart: always
+    depends_on:
+      - database
+    networks:
+      - twitter-clone-network
+    ports:
+      - "80:80"
+
+networks:
+  twitter-clone-network:
