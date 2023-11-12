@@ -10,7 +10,7 @@ const AuthService = {
         window.location.href = "/login";
     },
     isAuthenticated: (): boolean => {
-        const token = document.cookie.split(";").find((cookie) => cookie.includes("token"))
+        const token: string | undefined = document.cookie.split(";").find((cookie) => cookie.includes("token"))
         return !!token;
     }
 };

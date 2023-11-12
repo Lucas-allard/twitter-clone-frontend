@@ -25,23 +25,27 @@ export const userSlice = createSlice({
         logout: () => {
             AuthService.logout()
         },
-        isAuthenticated: () => {
-            return AuthService.isAuthenticated()
-        }
     },
     extraReducers: {
         [signup.fulfilled.type]: (_state, action: PayloadAction<ApiResponse>) => {
-            return {
-                message: action.payload.message,
-                code: action.payload.code,
+            const {message, code}: ApiResponse = action.payload
+            if (code === 200) {
+                window.location.href = "/login";
+            } else {
+                console.log(message, code)
             }
         },
+        [signup.rejected.type]: (_state, action: PayloadAction<ApiResponse>) => {
+            return action.payload
+        },
         [login.fulfilled.type]: (_state, action: PayloadAction<ApiResponseWithToken>) => {
-            return {
-                message: action.payload.message,
-                code: action.payload.code,
-                token: action.payload.token,
-            }
+            const {token}: ApiResponseWithToken = action.payload
+            const expires: Date = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14)
+            document.cookie = `token=${token}; path=/; expires=${expires.toUTCString()}`
+            window.location.href = "/";
+        },
+        [login.rejected.type]: (_state, action: PayloadAction<ApiResponse>) => {
+            return action.payload
         },
 
     }
