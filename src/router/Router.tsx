@@ -3,6 +3,7 @@ import PrivateRoute from "./PrivateRoute.tsx";
 import HomePage from "../views/HomePage.tsx";
 import PublicRoutes from "./PublicRoutes.tsx";
 import TweetPage from "../views/TweetPage.tsx";
+import ProfilePage from "../views/ProfilePage.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -15,6 +16,14 @@ export const router = createBrowserRouter([
             {
                 path: "/:username/status/:id",
                 element: <TweetPage/>,
+            },
+            {
+                path: "/:username/:id",
+                element: <ProfilePage/>,
+            },
+            {
+                path: "/profile",
+                element: <ProfilePage/>,
             },
             {
                 path: "*",

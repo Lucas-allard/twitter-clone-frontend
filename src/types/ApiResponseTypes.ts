@@ -21,6 +21,10 @@ export interface LoginResponse extends ApiResponse<{ token: string, user: User }
     }
 }
 
+export interface UserResponse extends ApiResponse<User> {
+    data?: User
+}
+
 export interface TweetResponse extends ApiResponse<Tweet[] | Tweet> {
     data?: Tweet[] | Tweet
 }

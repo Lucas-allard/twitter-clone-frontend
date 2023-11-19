@@ -111,7 +111,7 @@ const FormFeatures: FC<FormFeaturesProps> = ({setSelectedGifs, setValue, setImag
                     onClick={() => openModal("smiley")}
                 />
                 <Modal modalType="smiley">
-                    <Wrapper className="w-full h-full my-2">
+                    <Wrapper className="w-full h-full my-2 px-4">
                         <EmojiPicker
                             width="100%"
                             onEmojiClick={onSmileyClick}

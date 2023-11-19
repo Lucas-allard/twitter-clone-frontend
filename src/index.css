@@ -48,7 +48,7 @@
     }
 
     .modal-gif {
-        @apply overflow-y-auto max-h-[85vh] max-w-6xl py-4;
+        @apply overflow-y-auto max-h-[85vh] max-w-6xl;
 
     }
 }

@@ -47,9 +47,9 @@ const Modal: FC<ModalProps> = ({children, modalType}: ModalProps): ReactElement 
             onClick={onClickOutside}
         >
             <Wrapper
-                className={`fixed top-12 z-50 bg-black w-full max-w-lg rounded-lg p-4 shadow-md ${modalClassName}`}
+                className={`fixed top-12 z-50 bg-black w-full max-w-lg rounded-lg shadow-md ${modalClassName}`}
             >
-                <Wrapper className="flex justify-start">
+                <Wrapper className="flex justify-start py-4 px-4 ">
                     <Button className="text-white" onClick={() => closeModal()}>
                         X
                     </Button>

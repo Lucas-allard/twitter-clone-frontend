@@ -10,6 +10,10 @@ export const getTextForFields = (key: keyof Credentials): string => {
             return 'Email';
         case 'password':
             return 'Mot de passe';
+        case 'bio':
+            return 'Bio';
+        case 'image':
+            return 'photo de profil';
         default:
             return 'Label';
     }
@@ -21,6 +25,8 @@ export const getTypeForFields = (key: keyof Credentials): string => {
             return 'email';
         case 'password':
             return 'password';
+        case 'image':
+            return 'file';
         default:
             return 'text';
     }

@@ -23,6 +23,7 @@ const TweetCard: FC<TweetCardProps> = ({tweet, className}: TweetCardProps): Reac
                 <Wrapper className="flex flex-col ml-4 w-[90%]">
                     <TweetInfo
                         userName={tweet.user.name}
+                        userId={tweet.user.id}
                         date={tweet.date}
                     />
                     <TweetContent

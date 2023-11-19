@@ -93,7 +93,7 @@ const SidebarMenu = ({}) => {
 
     return (
         <aside
-            className="sticky top-0 py-4 pr-4 pl-8 w-min min-h-screen max-h-screen 2xl:w-[300px] flex flex-col justify-between border-r border-gray-600">
+            className="hidden sticky top-0 py-4 pr-4 pl-8  min-h-screen max-h-screen 2xl:w-[300px] md:flex flex-col justify-between border-r border-gray-600">
             <nav>
                 <ul className="flex flex-col">
                     <li className="sidebar-item w-fit 2xl:px-6 font-black-ops-one font-thin text-xl">
@@ -107,6 +107,7 @@ const SidebarMenu = ({}) => {
                                 <Link
                                     to={link.href}
                                     className="flex flex-row items-center"
+                                    replace
                                 >
                                     {link.icon}
                                     <span className={link.className}>

@@ -16,7 +16,7 @@ interface GifPickerProps {
 const GifPicker: FC<GifPickerProps> = ({onGifClick}: GifPickerProps): ReactElement => {
 
     return (
-        <Wrapper className="max-w-full">
+        <Wrapper className="max-w-full px-4">
             <SearchContextManager apiKey={import.meta.env.VITE_GIPHY_API_KEY}>
                 <GifGrid onGifClick={onGifClick}/>
             </SearchContextManager>

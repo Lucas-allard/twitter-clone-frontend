@@ -17,12 +17,16 @@ import Wrapper from '../components/Wrapper/Wrapper.tsx';
 type Tab = 'home' | 'subscriptions'
 const HomePage: FC = (): ReactElement => {
     const [activeTab, setActiveTab] = useState<Tab>('home')
+    const [scroll, setScroll] = useState<boolean>(false)
     const tweets: Tweet[] = useAppSelector(selectTweets);
     const loading: boolean = useAppSelector(selectTweetLoading);
     const dispatch: AppDispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(getAllTweets())
+        window.addEventListener('scroll', () => {
+            setScroll(window.scrollY > 0)
+        })
     }, []);
 
     return (
@@ -34,7 +38,7 @@ const HomePage: FC = (): ReactElement => {
                 </Modal>
             </ModalProvider>
             <main>
-                <Wrapper className="w-full flex flex-row justify-between items-center border-b border-gray-600">
+                <Wrapper className={`w-full flex flex-row justify-between items-center border-b border-gray-600 sticky top-0 bg-black/90 z-10 ${scroll ? 'border-b border-gray-600' : ''}`}>
                     <ul className="w-full flex flex-row justify-around text-white">
                         <li
                             className="w-full flex justify-center cursor-pointer hover:bg-white/10"

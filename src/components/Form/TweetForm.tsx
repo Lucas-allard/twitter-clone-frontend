@@ -22,7 +22,9 @@ const TweetForm: FC = (): ReactElement => {
     useAutosizeTextarea(textAreaRef.current, value)
 
     const onChange = (event: FormEvent<HTMLTextAreaElement>): void => {
-        const {value}: { value: string } = event.currentTarget;
+        const {value}: {
+            value: string
+        } = event.currentTarget;
         setValue(value);
     }
 
@@ -49,10 +51,13 @@ const TweetForm: FC = (): ReactElement => {
     return (
         <Form className="w-full p-4" onSubmit={onSubmit}>
             <Wrapper className="flex flex-row">
-                <AvatarPicture
-                    profilePicture="https://via.placeholder.com/150"
-                    username="John Doe"
-                />
+                {user &&
+                    <AvatarPicture
+                        profilePicture={user.image}
+                        username="John Doe"
+                        profilePictureSize="mx-auto w-8 h-8"
+                    />
+                }
                 <Wrapper className="flex flex-col ml-4 w-full">
                     <Textarea
                         name="name"

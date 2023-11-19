@@ -45,7 +45,7 @@ const httpModule: {
     get: (params: Params) => Promise<ApiResponse<any>>
 } = {
     post: <T>({ url, body }: Params) => sendRequest<ApiResponse<T>>({ url, method: 'POST', body }),
-    get: <T>({ url }: Params) => sendRequest<ApiResponse<T>>({ url, method: 'GET' }),
+    get: <T>({ url, body }: Params) => sendRequest<ApiResponse<T>>({ url, method: 'GET', body }),
 };
 
 export default httpModule;

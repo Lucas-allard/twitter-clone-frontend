@@ -4,7 +4,7 @@ interface LabelProps {
     htmlFor: string;
     label?: string;
     children?: ReactElement;
-    className: string;
+    className?: string;
 }
 
 const Label: FC<LabelProps> = (
