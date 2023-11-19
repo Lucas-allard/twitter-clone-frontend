@@ -15,8 +15,7 @@ const AvatarPicture: FC<AvatarPictureProps> = (
     }
 ): ReactElement =>
     (
-
-        <Wrapper className={`flex flex-row cursor-pointer ${className}`}>
+        <Wrapper className={`flex flex-row cursor-pointer ${className ?? ""}`}>
             <img src={profilePicture ?? 'https://via.placeholder.com/150'}
                  alt={`Avatar de ${username}`}
                  className="mx-auto rounded-full w-8 h-8"

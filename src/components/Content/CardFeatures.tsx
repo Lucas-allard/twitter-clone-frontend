@@ -5,8 +5,8 @@ import {Like, Comment} from "../../types";
 import {FC, ReactElement} from "react";
 
 interface CardFeaturesProps {
-    likes: Array<Like>;
-    comments: Array<Comment>;
+    likes: [] | Like[]
+    comments: [] | Comment[]
     postRetweets: number;
 }
 
@@ -81,16 +81,16 @@ const CardFeatures: FC<CardFeaturesProps> = (
                 return null;
         }
     }
-    const getValueForFeature = (feature: string): number | null => {
+    const getValueForFeature = (feature: string): number | undefined => {
         switch (feature) {
             case "likes":
-                return likes.length;
+                return likes?.length;
             case "retweets":
                 return postRetweets;
             case "comments":
-                return comments.length;
+                return comments?.length;
             default:
-                return null;
+                return undefined;
         }
     }
     const getActionForFeature = (feature: string): (() => void) | undefined => {
@@ -108,13 +108,13 @@ const CardFeatures: FC<CardFeaturesProps> = (
         }
     }
 
-    const featuresIcons: Array<{
-        value: number | null;
-        icon: ReactElement | null;
+    const featuresIcons: {
         iconWrapperClassName: string | undefined;
-        valueClassName: string | null;
         onClick: (() => void) | undefined;
-    }> = features.map((feature) => (
+        icon: ReactElement | null;
+        value: number | undefined;
+        valueClassName: string | null
+    }[] = features.map((feature) => (
         {
             value: getValueForFeature(feature),
             icon: getIconForFeature(feature),

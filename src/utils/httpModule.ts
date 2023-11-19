@@ -1,8 +1,14 @@
-import {DeleteParams, GetParams, PostParams, PutParams, RequestOptions, SendRequestOptions} from "../types";
+import {
+    ApiResponse,
+    Params,
+    RequestOptions,
+    SendRequestOptions
+} from "../types";
 
 const updateOptions = (options: RequestOptions): RequestOptions => {
     const updateOptions: RequestOptions = {...options};
     const token: string | undefined = document.cookie.split(';').find(cookie => cookie.includes('token'))
+    ?.split('=')[1];
     if (token) {
         updateOptions.headers = {
             ...updateOptions.headers,
@@ -11,7 +17,7 @@ const updateOptions = (options: RequestOptions): RequestOptions => {
     }
     return updateOptions;
 }
-const sendRequest = async <T>({url, method, body}: SendRequestOptions): Promise<T> => {
+const sendRequest = async <T>({url, method, body}: SendRequestOptions): Promise<ApiResponse<T>> => {
     const options: RequestOptions = {
         method,
         headers: {
@@ -23,20 +29,23 @@ const sendRequest = async <T>({url, method, body}: SendRequestOptions): Promise<
         options.body = JSON.stringify(body);
     }
 
-    const response: Response = await fetch(url, updateOptions(options))
+
+    const response: Response = await fetch(url, updateOptions(options));
 
     if (!response.ok) {
-        const errorMessage = await response.json() as T;
-        throw new Error(JSON.stringify(errorMessage));
+        throw new Error(JSON.stringify({message: response.statusText, code: response.status}));
     }
 
-    return await response.json() as T;
+    const data = await response.json() as T;
+    return {data, message: response.statusText, code: response.status} as ApiResponse<T>;
 }
 
-const httpModule = {
-    get: <T>({ url }: GetParams): Promise<T> => sendRequest<T>({ url, method: 'GET' }),
-    post: <T>({ url, body }: PostParams): Promise<T> => sendRequest<T>({ url, method: 'POST', body }),
-    put: <T>({ url, body }: PutParams): Promise<T> => sendRequest<T>({ url, method: 'PUT', body }),
-    delete: <T>({ url }: DeleteParams): Promise<T> => sendRequest<T>({ url, method: 'DELETE' }),
+const httpModule: {
+    post: (params: Params) => Promise<ApiResponse<any>>
+    get: (params: Params) => Promise<ApiResponse<any>>
+} = {
+    post: <T>({ url, body }: Params) => sendRequest<ApiResponse<T>>({ url, method: 'POST', body }),
+    get: <T>({ url }: Params) => sendRequest<ApiResponse<T>>({ url, method: 'GET' }),
 };
+
 export default httpModule;

@@ -1,26 +1,56 @@
-import {FC, ReactElement, ReactNode} from "react";
+import {FC, MouseEventHandler, ReactElement, ReactNode, useEffect} from "react";
 import Wrapper from "../Wrapper/Wrapper.tsx";
 import Button from "../Commons/Button.tsx";
 import {useModal} from "../../context/ModalContex.tsx";
-import {ModalContextProps} from "../../types";
 
 interface ModalProps {
-    children: ReactNode
+    children: ReactNode;
+    modalType: string;
 }
-const Modal: FC<ModalProps> = ({children}: ModalProps): ReactElement | null => {
-    const {activeModal, closeModal} : ModalContextProps = useModal();
-    const {isOpen} : {isOpen: boolean} = activeModal;
+const Modal: FC<ModalProps> = ({children, modalType}: ModalProps): ReactElement | null => {
+    const {activeModal, closeModal} = useModal();
+    const {modalStack, modals} = activeModal;
+    const isModalOpen = modalStack.includes(modalType) && modals[modalType];
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent): void => {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        };
+
+        if (isModalOpen) {
+            const body = document.body;
+            body.style.overflow = "hidden";
+            document.addEventListener("keydown", handleKeyDown);
+
+            return () => {
+                body.style.overflow = "auto";
+                document.removeEventListener("keydown", handleKeyDown);
+            };
+        }
+    }, [isModalOpen, modalType, closeModal]);
+
+    const onClickOutside: MouseEventHandler<HTMLDivElement> = (event): void => {
+        if (event.target === event.currentTarget) {
+            closeModal();
+        }
+    };
+
+    if (!isModalOpen) return null;
+
+    const modalClassName = modalType === "gif" ? "modal-gif" : "";
 
     return (
-        <Wrapper className="fixed top-0 left-0 z-20 w-full h-full flex justify-center items-center bg-[#5b708366]">
-            <Wrapper className="fixed top-12 z-50 bg-black w-full max-w-md rounded-lg p-4 shadow-md">
+        <Wrapper
+            className="fixed top-0 left-0 z-20 w-full h-full flex justify-center items-center bg-[#5b708366]"
+            onClick={onClickOutside}
+        >
+            <Wrapper
+                className={`fixed top-12 z-50 bg-black w-full max-w-lg rounded-lg p-4 shadow-md ${modalClassName}`}
+            >
                 <Wrapper className="flex justify-start">
-                    <Button
-                        className="text-white"
-                        onClick={() => closeModal()}
-                    >
+                    <Button className="text-white" onClick={() => closeModal()}>
                         X
                     </Button>
                 </Wrapper>
@@ -29,7 +59,7 @@ const Modal: FC<ModalProps> = ({children}: ModalProps): ReactElement | null => {
                 </Wrapper>
             </Wrapper>
         </Wrapper>
-    )
-}
+    );
+};
 
 export default Modal;

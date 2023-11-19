@@ -1,9 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
+import {configureStore} from '@reduxjs/toolkit'
 import {userSlice} from "./features/user/userSlice.ts";
+import {tweetSlice} from "./features/tweet/tweetSlice.ts";
 
 export const store = configureStore({
     reducer: {
         user: userSlice.reducer,
+        tweet: tweetSlice.reducer
     }
 })
 

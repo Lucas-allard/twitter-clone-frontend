@@ -33,7 +33,7 @@ const AuthForm: FC<AuthFormProps> = (
         errors,
         fields,
         onSubmit
-    }
+    }: AuthFormProps
 ): ReactElement => {
     return (
         <Form onSubmit={onSubmit} className="flex flex-col lg:w-1/2 2xl:w-full">

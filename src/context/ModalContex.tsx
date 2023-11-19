@@ -4,28 +4,38 @@ import {ModalContextProps, ModalProviderProps, ModalState} from "../types";
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 export const ModalProvider: FC<ModalProviderProps> = ({children}: ModalProviderProps): ReactElement => {
     const [activeModal, setActiveModal] = useState<ModalState>({
-        isOpen: false,
-        type: null,
+        modalStack: [],
+        modals: {},
     });
 
     const openModal = (modalType: string): void => {
-        setActiveModal({
-            isOpen: true,
-            type: modalType,
-        });
+        setActiveModal((prev) => {
+            const updatedStack = [...prev.modalStack, modalType];
+            const updatedModals = { ...prev.modals, [modalType]: true };
 
-        const {body}: { body: HTMLElement } = document;
-        body.style.overflow = 'hidden';
+            return {
+                modalStack: updatedStack,
+                modals: updatedModals,
+            };
+        });
     };
 
     const closeModal = (): void => {
-        setActiveModal({
-            isOpen: false,
-            type: null,
-        });
+        setActiveModal((prev) => {
+            const updatedStack = [...prev.modalStack];
+            const removedModal = updatedStack.pop();
 
-        const {body}: { body: HTMLElement } = document;
-        body.style.overflow = 'auto';
+            if (removedModal) {
+                const updatedModals = { ...prev.modals, [removedModal]: false };
+
+                return {
+                    modalStack: updatedStack,
+                    modals: updatedModals,
+                };
+            }
+
+            return prev;
+        });
     };
 
     return (

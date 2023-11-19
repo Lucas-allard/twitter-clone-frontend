@@ -7,9 +7,17 @@ import {Image} from "./ImageModel.ts";
 export interface Tweet {
     id: number;
     user: User;
-    images: Array<Image>;
+    title: string;
+    images: Array<Image> | [];
     date: string;
     content: string;
-    likes: Array<Like>
-    comments: Array<Comment>
+    likes: Array<Like> | [];
+    comments: Array<Comment> | [];
+}
+
+export interface TweetDBO {
+    user: User;
+    title: string;
+    images?: Array<Image> | [];
+    content: string;
 }

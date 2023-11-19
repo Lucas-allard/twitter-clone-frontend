@@ -1,22 +1,26 @@
-export interface ApiResponse {
-    code: number;
-    message: string;
-    error?: {
-        message: string;
-        code: number;
-    };
+import {Tweet} from "./TweetModel.ts";
+import {User} from "./UserModel.ts";
+
+export interface ApiResponse<T> {
+    message: string,
+    code: number,
+    data?: T
 }
 
-export interface ApiResponseWithToken extends ApiResponse {
-    token?: string;
+export interface SignupResponse extends ApiResponse<{token: string, user: User}> {
+    data?: {
+        token: string,
+        user: User
+    }
 }
 
-export interface CombinedApiResponse {
-    code: number;
-    message: string;
-    error?: {
-        message: string;
-        code: number;
-    };
-    token?: string;
+export interface LoginResponse extends ApiResponse<{ token: string, user: User }> {
+    data?: {
+        token: string,
+        user: User
+    }
+}
+
+export interface TweetResponse extends ApiResponse<Tweet[] | Tweet> {
+    data?: Tweet[] | Tweet
 }

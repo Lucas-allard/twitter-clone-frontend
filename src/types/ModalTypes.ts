@@ -1,9 +1,10 @@
 import {ReactNode} from "react";
 
 export interface ModalState {
-    isOpen: boolean;
-    type: string | null;
+    modalStack: string[];
+    modals: Record<string, boolean>;
 }
+
 
 export interface ModalContextProps {
     activeModal: ModalState;

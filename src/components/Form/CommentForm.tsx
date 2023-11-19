@@ -1,8 +1,8 @@
-import {FC, FormEvent, ReactElement, useRef, useState} from "react";
+import {FormEvent, useRef, useState} from "react";
 import {IGif} from "@giphy/js-types";
+import {Image} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../hooks.ts";
 import {selectUser} from "../../features/user/userSlice.ts";
-import {createTweet} from "../../features/tweet/tweetSlice.ts";
 import useAutosizeTextarea from "../../hooks/useAutosizeTextarea.ts";
 import Form from "./Form.tsx";
 import Wrapper from "../Wrapper/Wrapper.tsx";
@@ -10,9 +10,8 @@ import AvatarPicture from "../Avatar/AvatarPicture.tsx";
 import Textarea from "./Textarea.tsx";
 import FormFeatures from "./FormFeatures.tsx";
 import Button from "../Commons/Button.tsx";
-import {Image, TweetDBO} from "../../types";
 
-const TweetForm: FC = (): ReactElement => {
+const CommentForm = () => {
     const [value, setValue] = useState<string>('');
     const [selectedGifs, setSelectedGifs] = useState<IGif[]>([]);
     const [images, setImages] = useState<Image[]>([]);
@@ -28,22 +27,6 @@ const TweetForm: FC = (): ReactElement => {
 
     const onSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-
-        if ((!value.trim() && images.length === 0) || !user) return;
-
-        const tweet: TweetDBO = {
-            content: value,
-            title: '',
-            images,
-            user,
-        };
-
-        const response = await dispatch(createTweet(tweet));
-
-        if (createTweet.fulfilled.match(response)) {
-            setValue('');
-            setSelectedGifs([]);
-        }
     }
 
     return (
@@ -83,6 +66,5 @@ const TweetForm: FC = (): ReactElement => {
             </Wrapper>
         </Form>
     )
-};
-
-export default TweetForm;
+}
+export default CommentForm;

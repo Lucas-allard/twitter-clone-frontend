@@ -1,15 +1,11 @@
-import HomePage from "../views/HomePage.tsx";
-import {Navigate} from "react-router-dom";
+import {ReactElement} from "react";
 import Layout from "../views/Layout.tsx";
+import {Navigate} from "react-router-dom";
+import AuthService from "../services/AuthService.ts";
 
-const PrivateRoute= () => {
-    return {
-        element: <Layout />,
-        children: [
-            { path: "/", element: <HomePage /> },
-            { path: "*", element: <Navigate to="/" replace /> },
-        ],
-    }
-}
+
+const PrivateRoute = (): ReactElement => {
+    return AuthService.isAuthenticated() ? <Layout/> : <Navigate to="/login" replace/>;
+};
 
 export default PrivateRoute;

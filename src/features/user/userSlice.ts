@@ -1,58 +1,79 @@
 import {AsyncThunk, createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {RootState} from "../../store.ts";
-import {ApiResponse, ApiResponseWithToken, Credentials, User} from "../../types";
+import {Credentials, LoginResponse, SignupResponse, User} from "../../types";
 import AuthService from "../../services/AuthService.ts";
 
-export const signup: AsyncThunk<ApiResponse, Credentials, {}> = createAsyncThunk(
+const handleAuthFulfilled = (state: UserState, action: PayloadAction<LoginResponse | SignupResponse>) => {
+    const { data } = action.payload;
+    console.log(data)
+    const { token, user } = data as { token: string; user: User };
+    const expires: Date = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14);
+    document.cookie = `token=${token}; path=/; expires=${expires.toUTCString()}`;
+    state.user = user;
+    localStorage.setItem('user', JSON.stringify(user));
+};
+
+export const signup: AsyncThunk<SignupResponse, Credentials, {}> = createAsyncThunk(
     'user/signup',
-    async (credentials: Credentials): Promise<ApiResponse> => {
+    async (credentials: Credentials): Promise<SignupResponse> => {
         return await AuthService.signup(credentials)
     }
 )
 
-export const login: AsyncThunk<ApiResponseWithToken, Credentials, {}> = createAsyncThunk(
+export const login: AsyncThunk<LoginResponse, Credentials, {}> = createAsyncThunk(
     'user/login',
-    async (credentials: Credentials): Promise<ApiResponseWithToken> => {
+    async (credentials: Credentials): Promise<LoginResponse> => {
         return await AuthService.login(credentials)
     }
-)
-const initialState: User | null = null;
+);
+
+interface UserState {
+    user: User | null,
+    error: {
+        message: string,
+        code: number
+    } | null
+}
+
+const initialState: UserState = {
+    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null,
+    error: null
+}
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        logout: () => {
+        logout: (state: UserState) => {
             AuthService.logout()
-        },
+            state.user = null
+            localStorage.removeItem('user');
+            location.reload();
+        }
     },
     extraReducers: {
-        [signup.fulfilled.type]: (_state, action: PayloadAction<ApiResponse>) => {
-            const {message, code}: ApiResponse = action.payload
-            if (code === 200) {
-                window.location.href = "/login";
-            } else {
-                console.log(message, code)
-            }
+        [signup.fulfilled.type]: (state: UserState, action: PayloadAction<SignupResponse>) => {
+            handleAuthFulfilled(state, action);
         },
-        [signup.rejected.type]: (_state, action: PayloadAction<ApiResponse>) => {
-            return action.payload
+        [signup.rejected.type]: (state: UserState, action: PayloadAction<undefined, string, any, Error>) => {
+            const {message, code}: { message: string, code: number } = JSON.parse(action.error.message)
+            state.error = {message, code}
+            return state
         },
-        [login.fulfilled.type]: (_state, action: PayloadAction<ApiResponseWithToken>) => {
-            const {token}: ApiResponseWithToken = action.payload
-            const expires: Date = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14)
-            document.cookie = `token=${token}; path=/; expires=${expires.toUTCString()}`
-            window.location.href = "/";
+        [login.fulfilled.type]: (state: UserState, action: PayloadAction<LoginResponse>) => {
+            handleAuthFulfilled(state, action);
         },
-        [login.rejected.type]: (_state, action: PayloadAction<ApiResponse>) => {
-            return action.payload
-        },
-
+        [login.rejected.type]: (state: UserState, action: PayloadAction<undefined, string, any, Error>) => {
+            const {message, code}: { message: string, code: number } = JSON.parse(action.error.message)
+            state.error = {message, code}
+            return state
+        }
     }
 })
 
-export const {} = userSlice.actions
+export const {logout} = userSlice.actions
 
-export const selectUser = (state: RootState) => state.user
+export const selectUser = (state: RootState) => state.user.user
+export const selectUserError = (state: RootState) => state.user.error
 
 export default userSlice.reducer

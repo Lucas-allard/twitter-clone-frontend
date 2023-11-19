@@ -7,7 +7,7 @@ services:
       - twitter-clone-network
 
   api:
-    image: nayzow/twitter-clone-backend
+    image: twitter-clone-backend
     restart: always
     depends_on:
       - database

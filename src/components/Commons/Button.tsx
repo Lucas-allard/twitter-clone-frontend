@@ -1,7 +1,6 @@
 import  {FC, ReactElement, ReactNode, MouseEvent} from 'react';
 
 interface ButtonProps {
-    // type is default to "button" but can be "submit" or "reset"
     type?: "button" | "submit" | "reset";
     className: string;
     children: ReactNode;

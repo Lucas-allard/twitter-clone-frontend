@@ -12,9 +12,12 @@ import Button from "../Commons/Button.tsx";
 import Avatar from "../Avatar/Avatar.tsx";
 import {useModal} from "../../context/ModalContex.tsx";
 import {ModalContextProps} from "../../types";
-import AuthService from "../../services/AuthService.ts";
+import {useAppDispatch, useAppSelector} from "../../hooks.ts";
+import {logout, selectUser} from "../../features/user/userSlice.ts";
 
 const SidebarMenu = ({}) => {
+    const user = useAppSelector(selectUser);
+    const dispatch = useAppDispatch();
     const {openModal}: ModalContextProps = useModal();
     const ACTIVE_ICON_COLOR: string = "#FFFFFF";
     const INACTIVE_ICON_COLOR: string = "#E5E7EB";
@@ -23,7 +26,7 @@ const SidebarMenu = ({}) => {
     const INACTIVE_LINK: string = "not-active-link";
     const pathName: string = location.pathname;
     const routes: string[] = [
-        "/",
+        "/home",
         "/explorer",
         "/notifications",
         "/messages",
@@ -35,7 +38,7 @@ const SidebarMenu = ({}) => {
     }
     const getIconForRoute = (route: string, currentPath: string): ReactElement | null => {
         switch (route) {
-            case "/":
+            case "/home":
                 return <IconHome
                     size={ICON_SIZE}
                     color={getActiveColor(route, currentPath)}
@@ -66,7 +69,7 @@ const SidebarMenu = ({}) => {
     }
     const getTextForRoute = (route: string) => {
         switch (route) {
-            case "/":
+            case "/home":
                 return "Accueil";
             case "/explorer":
                 return "Explorer";
@@ -76,7 +79,6 @@ const SidebarMenu = ({}) => {
                 return "Messages";
             case "/profile":
                 return "Profil";
-                ;
             default:
                 return null;
         }
@@ -87,16 +89,15 @@ const SidebarMenu = ({}) => {
             text: getTextForRoute(route),
             href: route,
             className: pathName === route ? ACTIVE_LINK : INACTIVE_LINK
-        })
-    );
+        }));
 
     return (
         <aside
             className="sticky top-0 py-4 pr-4 pl-8 w-min min-h-screen max-h-screen 2xl:w-[300px] flex flex-col justify-between border-r border-gray-600">
             <nav>
                 <ul className="flex flex-col">
-                    <li className="sidebar-item 2xl:px-6 font-black-ops-one font-thin text-xl">
-                        <Link to="/" className="flex justify-center items-center">X</Link>
+                    <li className="sidebar-item w-fit 2xl:px-6 font-black-ops-one font-thin text-xl">
+                        <Link to="/home" className="flex items-center">X</Link>
                     </li>
                     {links.map((link, index) => (
                             <li
@@ -116,8 +117,8 @@ const SidebarMenu = ({}) => {
                         )
                     )}
                     <li
-                        className="sidebar-item"
-                        onClick={() => AuthService.logout()}
+                        className="sidebar-item flex flex-row items-center gap-0"
+                        onClick={() => dispatch(logout())}
                     >
                         <IconLogout
                             size={ICON_SIZE}
@@ -144,11 +145,13 @@ const SidebarMenu = ({}) => {
                     </Button>
                 </Wrapper>
             </nav>
-            <Avatar
-                username="john_doe"
-                name="John Doe"
-                profilePicture="https://via.placeholder.com/150"
-            />
+            {user &&
+                <Avatar
+                    username={user.username}
+                    name={user.name}
+                    profilePicture={user.image}
+                />
+            }
         </aside>
     )
 };

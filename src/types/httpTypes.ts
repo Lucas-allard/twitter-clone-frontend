@@ -3,26 +3,12 @@ export interface RequestOptions {
     headers: Record<string, string>
     body?: string;
 }
-
 export interface SendRequestOptions {
     url: string;
     method: string;
     body?: any;
 }
-
-export interface GetParams {
+export interface Params {
     url: string;
-}
-export interface PostParams {
-    url: string;
-    body: any;
-}
-
-export interface PutParams {
-    url: string;
-    body: any;
-}
-
-export interface DeleteParams {
-    url: string;
+    body?: any;
 }

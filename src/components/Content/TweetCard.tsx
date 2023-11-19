@@ -8,12 +8,13 @@ import CardFeatures from "./CardFeatures.tsx";
 
 interface TweetCardProps {
    tweet: Tweet;
+   className?: string
 }
 
-const TweetCard: FC<TweetCardProps> = ({tweet}: TweetCardProps): ReactElement => {
+const TweetCard: FC<TweetCardProps> = ({tweet, className}: TweetCardProps): ReactElement => {
     const retweets: number = 69;
     return (
-        <Wrapper className="w-full p-4 border-b border-gray-600">
+        <Wrapper className={className}>
             <Wrapper className="flex flex-row">
                 <AvatarPicture
                     profilePicture={tweet.user.image}
@@ -27,6 +28,8 @@ const TweetCard: FC<TweetCardProps> = ({tweet}: TweetCardProps): ReactElement =>
                     <TweetContent
                         content={tweet.content}
                         images={tweet.images}
+                        userName={tweet.user.username}
+                        tweetId={tweet.id}
                     />
                     <CardFeatures
                         likes={tweet.likes}

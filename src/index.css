@@ -46,9 +46,29 @@
     input {
         @apply border border-white bg-transparent rounded-full px-4 py-2 w-full
     }
+
+    .modal-gif {
+        @apply overflow-y-auto max-h-[85vh] max-w-6xl py-4;
+
+    }
 }
 
 body {
     font-family: 'Mulish', sans-serif;
     overflow-x: hidden;
+}
+
+.EmojiPickerReact, aside.EmojiPickerReact.epr-main {
+    @apply bg-transparent border-none focus:outline-none focus:ring-0;
+}
+
+.EmojiPickerReact .epr-search-container input.epr-search {
+    @apply bg-transparent focus:outline-none focus:ring-0;
+}
+
+.EmojiPickerReact li.epr-emoji-category>.epr-emoji-category-label {
+    @apply text-white bg-black/20;
+}
+.EmojiPickerReact .epr-preview {
+    @apply border-none;
 }

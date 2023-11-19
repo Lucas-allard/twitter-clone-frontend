@@ -1,15 +1,19 @@
-import {FC, ReactElement, ReactNode} from 'react';
+import {FC, KeyboardEventHandler, MouseEventHandler, ReactElement, ReactNode} from 'react';
 
 interface WrapperProps {
     className?: string | undefined
-    children: ReactNode;
-    onClick?: () => void;
+    children?: ReactNode;
+    onClick?: MouseEventHandler<HTMLDivElement> | undefined
+    onKeyDown?: KeyboardEventHandler<HTMLDivElement> | undefined;
+    reference?: any;
 }
 
-const Wrapper: FC<WrapperProps> = ({className, children, onClick}: WrapperProps): ReactElement => (
+const Wrapper: FC<WrapperProps> = ({className, children, onClick, onKeyDown, reference}: WrapperProps): ReactElement => (
     <div
         className={className}
         onClick={onClick}
+        onKeyDown={onKeyDown}
+        ref={reference}
     >
         {children}
     </div>
